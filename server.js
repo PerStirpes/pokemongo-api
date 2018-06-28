@@ -3,6 +3,7 @@ const path = require('path')
 
 const express = require('express')
 const favicon = require('serve-favicon')
+const cors = require('cors')
 const graphql = require('express-graphql')
 const { Loki } = require('@lokijs/loki')
 const { FSStorage } = require('@lokijs/fs-storage')
@@ -14,11 +15,7 @@ const stage = process.env.UP_STAGE || 'development'
 const port = process.env.PORT || 4000
 const app = express()
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-  next()
-})
+app.use(cors())
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(logger.middleware)
 
@@ -40,7 +37,7 @@ db.initializePersistence({ adapter: new FSStorage() })
     process.exit(1)
   })
 
-function formatError(err) {
+function formatError (err) {
   return {
     code: err.code,
     message: err.message,
